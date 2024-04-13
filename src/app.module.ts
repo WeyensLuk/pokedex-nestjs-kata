@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { PokemonModule } from './pokemon/domain/pokemon.module';
 
 @Module({
-  imports: [MikroOrmModule.forRoot()],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [MikroOrmModule.forRoot(), PokemonModule],
 })
 export class AppModule {}

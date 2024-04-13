@@ -7,7 +7,7 @@ import { Pokemon } from '../domain/pokemon.entity';
 import config from '../../mikro-orm.test.config';
 import { PokemonService } from '../domain/pokemon.service';
 
-describe('AppController', () => {
+describe('PokemonController', () => {
   let controller: PokemonController;
   let orm: MikroORM;
 
