@@ -3,9 +3,9 @@ import { PokemonController } from './pokemon.controller';
 import { PokemonSeeder } from '../../../seeders/PokemonSeeder';
 import { MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Pokemon } from '../domain/pokemon.entity';
 import config from '../../mikro-orm.test.config';
 import { PokemonService } from '../domain/pokemon.service';
+import { Pokemon } from '../domain/pokemon.entity';
 
 describe('PokemonController', () => {
   let controller: PokemonController;
@@ -56,6 +56,55 @@ describe('PokemonController', () => {
       expect(pokemon.types[0].type.name).toBe('grass');
       expect(pokemon.types[1].slot).toBe(2);
       expect(pokemon.types[1].type.name).toBe('poison');
+    });
+
+    it('should sort by name ascending if the query parameter is provided', async () => {
+      const pokemons = await controller.findAll({
+        sortBy: 'name',
+        sortDirection: 'asc',
+      });
+      expect(pokemons[0].name).toBe('abra');
+      expect(pokemons[1].name).toBe('aerodactyl');
+      expect(pokemons[2].name).toBe('alakazam');
+    });
+
+    it('should sort by name descending if the query parameter is provided', async () => {
+      const pokemons = await controller.findAll({
+        sortBy: 'name',
+        sortDirection: 'desc',
+      });
+      expect(pokemons[0].name).toBe('zubat');
+      expect(pokemons[1].name).toBe('zapdos');
+      expect(pokemons[2].name).toBe('wigglytuff');
+    });
+
+    it('should sort by id ascending if the query parameter is provided', async () => {
+      const pokemons = await controller.findAll({
+        sortBy: 'id',
+        sortDirection: 'asc',
+      });
+      expect(pokemons[0].name).toBe('bulbasaur');
+      expect(pokemons[1].name).toBe('ivysaur');
+      expect(pokemons[2].name).toBe('venusaur');
+    });
+
+    it('should sort by id descending if the query parameter is provided', async () => {
+      const pokemons = await controller.findAll({
+        sortBy: 'id',
+        sortDirection: 'desc',
+      });
+      expect(pokemons[0].name).toBe('mew');
+      expect(pokemons[1].name).toBe('mewtwo');
+      expect(pokemons[2].name).toBe('dragonite');
+    });
+
+    it('should sort ascending by default if not sortDirection is provided', async () => {
+      const pokemons = await controller.findAll({
+        sortBy: 'id',
+      });
+      expect(pokemons[0].name).toBe('bulbasaur');
+      expect(pokemons[1].name).toBe('ivysaur');
+      expect(pokemons[2].name).toBe('venusaur');
     });
   });
 });
