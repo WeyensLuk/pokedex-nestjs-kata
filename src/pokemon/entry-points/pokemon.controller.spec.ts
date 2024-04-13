@@ -6,6 +6,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import config from '../../mikro-orm.test.config';
 import { PokemonService } from '../domain/pokemon.service';
 import { Pokemon } from '../domain/pokemon.entity';
+import { BadRequestException } from '@nestjs/common';
 
 describe('PokemonController', () => {
   let controller: PokemonController;
@@ -105,6 +106,23 @@ describe('PokemonController', () => {
       expect(pokemons[0].name).toBe('bulbasaur');
       expect(pokemons[1].name).toBe('ivysaur');
       expect(pokemons[2].name).toBe('venusaur');
+    });
+
+    it('should throw an error if sortDirection is not one of "asc" or "desc"', async () => {
+      await expect(
+        controller.findAll({
+          sortBy: 'id',
+          sortDirection: 'invalid',
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw an error if sortBy is a property that does not exist on Pokemon type', async () => {
+      await expect(
+        controller.findAll({
+          sortBy: 'invalid',
+        }),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });
