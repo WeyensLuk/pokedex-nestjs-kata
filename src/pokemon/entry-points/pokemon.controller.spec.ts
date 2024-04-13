@@ -36,5 +36,26 @@ describe('PokemonController', () => {
     it('should return all pokemon', async () => {
       expect(await controller.findAll()).toHaveLength(151);
     });
+
+    it('should return Pokemon objects with all fields defined', async () => {
+      const pokemon = (await controller.findAll())[0];
+      expect(pokemon).toHaveProperty('id');
+      expect(pokemon).toHaveProperty('name');
+      expect(pokemon).toHaveProperty('sprites');
+      expect(pokemon).toHaveProperty('types');
+    });
+
+    it('should return Pokemon objects with all fields properly filled in', async () => {
+      const pokemon = (await controller.findAll())[0];
+      expect(pokemon.id).toBe(1);
+      expect(pokemon.name).toBe('bulbasaur');
+      expect(pokemon.sprites.front_default).toBe(
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+      );
+      expect(pokemon.types[0].slot).toBe(1);
+      expect(pokemon.types[0].type.name).toBe('grass');
+      expect(pokemon.types[1].slot).toBe(2);
+      expect(pokemon.types[1].type.name).toBe('poison');
+    });
   });
 });

@@ -9,6 +9,8 @@ export class PokemonService {
   ) {}
 
   async findAll(): Promise<Pokemon[]> {
-    return this.repository.findAll();
+    return this.repository.findAll({
+      populate: ['sprites.front_default', 'types', 'types.type'],
+    });
   }
 }
