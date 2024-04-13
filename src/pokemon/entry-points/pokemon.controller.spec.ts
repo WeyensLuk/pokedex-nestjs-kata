@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PokemonController } from './pokemon.controller';
 import { PokemonSeeder } from '../../../seeders/PokemonSeeder';
-import { MikroORM } from '@mikro-orm/core';
+import { MikroORM, NotFoundError } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import config from '../../mikro-orm.test.config';
 import { PokemonService } from '../domain/pokemon.service';
@@ -156,6 +156,10 @@ describe('PokemonController', () => {
       expect(pokemon.types[0].type.name).toBe('grass');
       expect(pokemon.types[1].slot).toBe(2);
       expect(pokemon.types[1].type.name).toBe('poison');
+    });
+
+    it('should return NotFoundException for an ID that is not known', async () => {
+      await expect(controller.findOne(250)).rejects.toThrow(NotFoundError);
     });
   });
 });
