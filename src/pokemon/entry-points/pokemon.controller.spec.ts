@@ -125,4 +125,37 @@ describe('PokemonController', () => {
       ).rejects.toThrow(BadRequestException);
     });
   });
+
+  describe('findOne', () => {
+    it('should return a single pokemon', async () => {
+      const pokemon = await controller.findOne(1);
+      expect(pokemon).toBeDefined();
+    });
+
+    it('should return a Pokemon object with all fields filled in', async () => {
+      const pokemon = await controller.findOne(1);
+      expect(pokemon.id).toBe(1);
+      expect(pokemon.name).toBe('bulbasaur');
+      expect(pokemon.height).toBe(7);
+      expect(pokemon.weight).toBe(69);
+      expect(pokemon.sprites).toMatchObject({
+        front_default:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+        front_female: null,
+        front_shiny:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png',
+        front_shiny_female: null,
+        back_default:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png',
+        back_female: null,
+        back_shiny:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/1.png',
+        back_shiny_female: null,
+      });
+      expect(pokemon.types[0].slot).toBe(1);
+      expect(pokemon.types[0].type.name).toBe('grass');
+      expect(pokemon.types[1].slot).toBe(2);
+      expect(pokemon.types[1].type.name).toBe('poison');
+    });
+  });
 });

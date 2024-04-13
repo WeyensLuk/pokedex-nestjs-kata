@@ -10,6 +10,7 @@ import { PokemonSprites } from './pokemonsprites.entity';
 import { PokemonTypeMap } from './pokemontypemap.entity';
 
 export interface IPokemon {
+  [x: string]: any;
   id: number;
   name: string;
   sprites: PokemonSprites;
@@ -22,6 +23,12 @@ export class Pokemon implements IPokemon {
 
   @Property()
   name!: string;
+
+  @Property()
+  height!: number;
+
+  @Property()
+  weight!: number;
 
   @OneToOne(() => PokemonSprites)
   sprites!: PokemonSprites;

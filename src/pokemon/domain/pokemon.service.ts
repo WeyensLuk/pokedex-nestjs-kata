@@ -1,5 +1,5 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { Pokemon } from './pokemon.entity';
+import { IPokemon, Pokemon } from './pokemon.entity';
 import { EntityRepository } from '@mikro-orm/core';
 
 export class PokemonService {
@@ -8,16 +8,24 @@ export class PokemonService {
     private readonly repository: EntityRepository<Pokemon>,
   ) {}
 
-  async findAll(query?: any): Promise<Pokemon[]> {
+  async findAll(query?: any): Promise<IPokemon[]> {
     return this.repository.findAll({
-      populate: ['sprites.front_default', 'types', 'types.type'],
-      orderBy: query
-        ? {
-            [query?.sortBy]: query?.sortDirection
-              ? query?.sortDirection
-              : 'asc',
-          }
-        : {},
+      populate: ['id', 'name', 'sprites.front_default', 'types', 'types.type'],
+      fields: ['id', 'name'],
+      orderBy:
+        query && query.sortBy
+          ? {
+              [query?.sortBy]: query?.sortDirection
+                ? query?.sortDirection
+                : 'asc',
+            }
+          : null,
+    });
+  }
+
+  async findOne(id: number): Promise<Pokemon> {
+    return this.repository.findOneOrFail(id, {
+      populate: ['sprites', 'types', 'types.type'],
     });
   }
 }

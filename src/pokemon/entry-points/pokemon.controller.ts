@@ -1,5 +1,11 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
-import { Pokemon } from '../domain/pokemon.entity';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Param,
+  Query,
+} from '@nestjs/common';
+import { IPokemon } from '../domain/pokemon.entity';
 import { PokemonService } from '../domain/pokemon.service';
 
 @Controller('pokemon')
@@ -7,9 +13,14 @@ export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
 
   @Get()
-  async findAll(@Query() query?): Promise<Pokemon[]> {
+  async findAll(@Query() query?): Promise<IPokemon[]> {
     this.validateQueryParameters(query);
     return this.pokemonService.findAll(query);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number): Promise<IPokemon> {
+    return this.pokemonService.findOne(id);
   }
 
   private validateQueryParameters(query: any) {
