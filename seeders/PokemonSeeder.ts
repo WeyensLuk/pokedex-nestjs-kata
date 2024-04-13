@@ -1,16 +1,13 @@
 import type { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { Pokemon } from '../src/modules/pokemon.entity';
+import { Pokemon } from '../src/pokemon/domain/pokemon.entity';
+import { readFileSync } from 'fs';
 
 export class PokemonSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
-    const pokemons = [
-      new Pokemon(1, 'Bulbasaur'),
-      new Pokemon(2, 'Ivysaur'),
-      new Pokemon(3, 'Venusaur'),
-    ];
-
-    for (const pokemon of pokemons) {
+    const rawPokemons = readFileSync('./seeders/pokemons.json', 'utf-8');
+    for (const rawPokemon of JSON.parse(rawPokemons)) {
+      const pokemon = new Pokemon(rawPokemon.id, rawPokemon.name);
       em.create('Pokemon', pokemon);
     }
 

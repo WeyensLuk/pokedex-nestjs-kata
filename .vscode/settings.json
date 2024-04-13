@@ -1,5 +1,9 @@
 {
     "cSpell.words": [
         "Mikro"
-    ]
+    ],
+    "[typescript][json]": {
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+      },
 }
