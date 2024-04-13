@@ -5,6 +5,7 @@ import { MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Pokemon } from '../domain/pokemon.entity';
 import config from '../../mikro-orm.test.config';
+import { PokemonService } from '../domain/pokemon.service';
 
 describe('AppController', () => {
   let controller: PokemonController;
@@ -17,6 +18,7 @@ describe('AppController', () => {
         MikroOrmModule.forFeature({ entities: [Pokemon] }),
       ],
       controllers: [PokemonController],
+      providers: [PokemonService],
     }).compile();
 
     controller = app.get<PokemonController>(PokemonController);
@@ -31,8 +33,8 @@ describe('AppController', () => {
   afterAll(async () => await orm.close(true));
 
   describe('findAll', () => {
-    it('should return all pokemon', () => {
-      expect(controller.findAll()).toHaveLength(151);
+    it('should return all pokemon', async () => {
+      expect(await controller.findAll()).toHaveLength(151);
     });
   });
 });

@@ -1,12 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { Pokemon } from '../domain/pokemon.entity';
+import { PokemonService } from '../domain/pokemon.service';
 
 @Controller()
 export class PokemonController {
-  constructor() {}
+  constructor(private readonly pokemonService: PokemonService) {}
 
   @Get()
-  findAll(): Pokemon[] {
-    return [] as Pokemon[];
+  async findAll(): Promise<Pokemon[]> {
+    return this.pokemonService.findAll();
   }
 }
