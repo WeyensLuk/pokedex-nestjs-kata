@@ -7,6 +7,7 @@ import { TeamController } from './team.controller';
 import { TeamDto } from './team.dto';
 import { TeamService } from '../domain/team.service';
 import { Team } from '../domain/team.entity';
+import { BadRequestException } from '@nestjs/common';
 
 describe('TeamController', () => {
   let controller: TeamController;
@@ -109,6 +110,15 @@ describe('TeamController', () => {
 
       const updatedTeam = await orm.em.findOne(Team, team.id);
       expect(updatedTeam.pokemons).toEqual(pokemons);
+    });
+
+    it('should throw a BadRequestException if more than 6 Pokemon are provided', async () => {
+      const team = await createTeam('TeamOfSeven');
+      const pokemons = [1, 2, 3, 4, 5, 6, 7];
+
+      await expect(
+        controller.setPokemonsOnTeam(team.id, pokemons),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 

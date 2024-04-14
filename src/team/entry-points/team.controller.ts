@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { Team } from '../domain/team.entity';
 import { TeamService } from '../domain/team.service';
 import { TeamDto } from './team.dto';
@@ -36,6 +44,13 @@ export class TeamController {
     @Param('id') id: number,
     @Body() pokemons: number[],
   ): Promise<Team> {
+    validateNumberOfPokemon(pokemons);
+
     return this.teamService.setPokemonsOnTeam(id, pokemons);
+  }
+}
+function validateNumberOfPokemon(pokemons: number[]) {
+  if (pokemons.length > 6) {
+    throw new BadRequestException('A team can have at most 6 pokemon.');
   }
 }
