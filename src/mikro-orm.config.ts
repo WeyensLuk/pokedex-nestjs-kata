@@ -6,10 +6,11 @@ export default defineConfig({
   entities: ['./dist/**/*.entity.js'],
   entitiesTs: ['./src/**/*.entity.ts'],
   dbName: 'pokemon-db',
+  host: 'host.docker.internal',
   password: 'postgres',
   driver: PostgreSqlDriver,
   seeder: {
-    path: './seeders',
+    path: './src/seeders',
     defaultSeeder: 'PokemonSeeder',
     emit: 'ts',
   },

@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 
 export class PokemonSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
-    const rawPokemons = readFileSync('./seeders/pokemons.json', 'utf-8');
+    const rawPokemons = readFileSync('./src/seeders/pokemons.json', 'utf-8');
     for (const rawPokemon of JSON.parse(rawPokemons)) {
       const pokemon = rawPokemon as IPokemon;
       em.create('Pokemon', pokemon);
