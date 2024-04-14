@@ -60,69 +60,50 @@ describe('PokemonController', () => {
     });
 
     it('should sort by name ascending if the query parameter is provided', async () => {
-      const pokemons = await controller.findAll({
-        sortBy: 'name',
-        sortDirection: 'asc',
-      });
+      const pokemons = await controller.findAll('name', 'asc');
       expect(pokemons[0].name).toBe('abra');
       expect(pokemons[1].name).toBe('aerodactyl');
       expect(pokemons[2].name).toBe('alakazam');
     });
 
     it('should sort by name descending if the query parameter is provided', async () => {
-      const pokemons = await controller.findAll({
-        sortBy: 'name',
-        sortDirection: 'desc',
-      });
+      const pokemons = await controller.findAll('name', 'desc');
       expect(pokemons[0].name).toBe('zubat');
       expect(pokemons[1].name).toBe('zapdos');
       expect(pokemons[2].name).toBe('wigglytuff');
     });
 
     it('should sort by id ascending if the query parameter is provided', async () => {
-      const pokemons = await controller.findAll({
-        sortBy: 'id',
-        sortDirection: 'asc',
-      });
+      const pokemons = await controller.findAll('id', 'asc');
       expect(pokemons[0].name).toBe('bulbasaur');
       expect(pokemons[1].name).toBe('ivysaur');
       expect(pokemons[2].name).toBe('venusaur');
     });
 
     it('should sort by id descending if the query parameter is provided', async () => {
-      const pokemons = await controller.findAll({
-        sortBy: 'id',
-        sortDirection: 'desc',
-      });
+      const pokemons = await controller.findAll('id', 'desc');
       expect(pokemons[0].name).toBe('mew');
       expect(pokemons[1].name).toBe('mewtwo');
       expect(pokemons[2].name).toBe('dragonite');
     });
 
     it('should sort ascending by default if not sortDirection is provided', async () => {
-      const pokemons = await controller.findAll({
-        sortBy: 'id',
-      });
+      const pokemons = await controller.findAll('id');
       expect(pokemons[0].name).toBe('bulbasaur');
       expect(pokemons[1].name).toBe('ivysaur');
       expect(pokemons[2].name).toBe('venusaur');
     });
 
     it('should throw an error if sortDirection is not one of "asc" or "desc"', async () => {
-      await expect(
-        controller.findAll({
-          sortBy: 'id',
-          sortDirection: 'invalid',
-        }),
-      ).rejects.toThrow(BadRequestException);
+      await expect(controller.findAll('id', 'invalid')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw an error if sortBy is a property that does not exist on Pokemon type', async () => {
-      await expect(
-        controller.findAll({
-          sortBy: 'invalid',
-        }),
-      ).rejects.toThrow(BadRequestException);
+      await expect(controller.findAll('invalid')).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -160,6 +141,72 @@ describe('PokemonController', () => {
 
     it('should return NotFoundException for an ID that is not known', async () => {
       await expect(controller.findOne(250)).rejects.toThrow(NotFoundError);
+    });
+  });
+
+  describe('findAllPaginated', () => {
+    it('should return the first 10 pokemon', async () => {
+      const pokemons = await controller.findAllPaginated(null, null, 10, null);
+      expect(pokemons).toHaveLength(10);
+      expect(pokemons[0].name).toBe('bulbasaur');
+    });
+
+    it('should return the next 10 pokemon', async () => {
+      const pokemons = await controller.findAllPaginated(null, null, 10, 10);
+      expect(pokemons).toHaveLength(10);
+      expect(pokemons[0].name).toBe('metapod');
+    });
+
+    it('should sort by name ascending', async () => {
+      const pokemons = await controller.findAllPaginated(
+        'name',
+        'asc',
+        null,
+        null,
+      );
+      expect(pokemons[0].name).toBe('abra');
+      expect(pokemons[1].name).toBe('aerodactyl');
+      expect(pokemons[2].name).toBe('alakazam');
+    });
+
+    it('should return the last 11 pokemon', async () => {
+      const pokemons = await controller.findAllPaginated('id', 'asc', 11, 140);
+      expect(pokemons).toHaveLength(11);
+      expect(pokemons[10].name).toBe('mew');
+    });
+
+    it('should throw an error if sortDirection is not one of "asc" or "desc"', async () => {
+      await expect(
+        controller.findAllPaginated('id', 'invalid'),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw an error if sortBy is a property that does not exist on Pokemon type', async () => {
+      await expect(controller.findAllPaginated('invalid')).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should throw an error if limit is negative', async () => {
+      await expect(controller.findAllPaginated(null, null, -1)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should throw an error if offset is negative', async () => {
+      await expect(
+        controller.findAllPaginated(null, null, null, -1),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should gracefully handle requesting more items than are available', async () => {
+      const pokemons = await controller.findAllPaginated(
+        null,
+        null,
+        1000,
+        null,
+      );
+      expect(pokemons).toHaveLength(151);
     });
   });
 });

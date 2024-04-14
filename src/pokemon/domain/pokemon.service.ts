@@ -8,19 +8,34 @@ export class PokemonService {
     private readonly repository: EntityRepository<Pokemon>,
   ) {}
 
-  async findAll(query?: any): Promise<IPokemon[]> {
-    return this.repository.findAll({
+  async findAll(
+    sortBy?: string,
+    sortDirection?: string,
+    limit?: number,
+    offset?: number,
+  ): Promise<IPokemon[]> {
+    return this.repository.findAll(
+      this.createFindOptions(sortBy, sortDirection, limit, offset),
+    );
+  }
+
+  private createFindOptions(
+    sortBy?: string,
+    sortDirection?: string,
+    limit?: number,
+    offset?: number,
+  ): any {
+    return {
       populate: ['id', 'name', 'sprites.front_default', 'types', 'types.type'],
       fields: ['id', 'name'],
-      orderBy:
-        query && query.sortBy
-          ? {
-              [query?.sortBy]: query?.sortDirection
-                ? query?.sortDirection
-                : 'asc',
-            }
-          : null,
-    });
+      orderBy: sortBy
+        ? {
+            [sortBy]: sortDirection ? sortDirection : 'asc',
+          }
+        : null,
+      limit: limit,
+      offset: offset,
+    };
   }
 
   async findOne(id: number): Promise<Pokemon> {

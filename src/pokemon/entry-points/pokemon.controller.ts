@@ -4,10 +4,11 @@ import {
   Get,
   Param,
   Query,
+  Version,
 } from '@nestjs/common';
 import { IPokemon } from '../domain/pokemon.entity';
 import { PokemonService } from '../domain/pokemon.service';
-import { ApiNotFoundResponse, ApiTags } from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('pokemon')
 @Controller('pokemon')
@@ -15,15 +16,36 @@ export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
 
   @Get()
-  async findAll(@Query() query?): Promise<IPokemon[]> {
-    this.validateQueryParameters(query);
-    return this.pokemonService.findAll(query);
+  @ApiQuery({ name: 'sortBy', required: false })
+  @ApiQuery({ name: 'sortDirection', required: false })
+  async findAll(
+    @Query() sortBy?: string,
+    @Query() sortDirection?: string,
+  ): Promise<IPokemon[]> {
+    this.validateQueryParameters({ sortBy, sortDirection });
+    return this.pokemonService.findAll(sortBy, sortDirection);
   }
 
   @Get(':id')
   @ApiNotFoundResponse({ description: 'Pokemon not found' })
   async findOne(@Param('id') id: number): Promise<IPokemon> {
     return this.pokemonService.findOne(id);
+  }
+
+  @Get()
+  @Version('2')
+  @ApiQuery({ name: 'sortBy', required: false })
+  @ApiQuery({ name: 'sortDirection', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'offset', required: false })
+  async findAllPaginated(
+    @Query() sortBy?: string,
+    @Query() sortDirection?: string,
+    @Query() limit?: number,
+    @Query() offset?: number,
+  ): Promise<IPokemon[]> {
+    this.validateQueryParameters({ sortBy, sortDirection, limit, offset });
+    return this.pokemonService.findAll(sortBy, sortDirection, limit, offset);
   }
 
   private validateQueryParameters(query: any) {
@@ -36,5 +58,9 @@ export class PokemonController {
       throw new BadRequestException(
         'Invalid sortBy field. Must be either "name" or "id"',
       );
+    if (query.limit && query.limit < 0)
+      throw new BadRequestException('Invalid limit. Must be greater than 0');
+    if (query.offset && query.offset < 0)
+      throw new BadRequestException('Invalid offset. Must be greater than 0');
   }
 }
