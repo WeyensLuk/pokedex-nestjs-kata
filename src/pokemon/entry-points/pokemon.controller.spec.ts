@@ -22,7 +22,6 @@ describe('PokemonController', () => {
       providers: [PokemonService],
     }).compile();
 
-    controller = app.get<PokemonController>(PokemonController);
     orm = app.get<MikroORM>(MikroORM);
     const seeder = orm.getSeeder();
     await orm.schema.refreshDatabase();

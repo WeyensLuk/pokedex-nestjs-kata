@@ -2,7 +2,6 @@ import { MikroORM, NotFoundError } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { TestingModule, Test } from '@nestjs/testing';
 import config from '../../mikro-orm.test.config';
-import { PokemonSeeder } from '../../seeders/PokemonSeeder';
 import { TeamController } from './team.controller';
 import { TeamDto } from './team.dto';
 import { TeamService } from '../domain/team.service';
@@ -24,9 +23,7 @@ describe('TeamController', () => {
     }).compile();
 
     orm = app.get<MikroORM>(MikroORM);
-    const seeder = orm.getSeeder();
     await orm.schema.refreshDatabase();
-    await seeder.seed(PokemonSeeder);
 
     controller = app.get<TeamController>(TeamController);
   });
