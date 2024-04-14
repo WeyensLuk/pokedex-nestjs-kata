@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { Team } from '../domain/team.entity';
 import { TeamService } from '../domain/team.service';
 import { TeamDto } from './team.dto';
@@ -20,5 +20,13 @@ export class TeamController {
   @Post()
   async create(@Body() team: TeamDto): Promise<Team> {
     return this.teamService.create(team);
+  }
+
+  @Put(':id')
+  async setPokemonsOnTeam(
+    @Param('id') id: number,
+    @Body() pokemons: number[],
+  ): Promise<Team> {
+    return this.teamService.setPokemonsOnTeam(id, pokemons);
   }
 }

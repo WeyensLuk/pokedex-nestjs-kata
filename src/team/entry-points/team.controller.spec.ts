@@ -86,6 +86,32 @@ describe('TeamController', () => {
     });
   });
 
+  describe('setPokemonsOnTeam', () => {
+    it('should return a team with the pokemons set', async () => {
+      const team = await createTeam('Gary');
+      const pokemons = [18, 65, 112, 59, 130, 3];
+
+      const updatedTeam = await controller.setPokemonsOnTeam(team.id, pokemons);
+      expect(updatedTeam.pokemons).toEqual(pokemons);
+    });
+
+    it('should throw a NotFoundError when the team is not found', async () => {
+      await expect(controller.setPokemonsOnTeam(1, [1, 2, 3])).rejects.toThrow(
+        NotFoundError,
+      );
+    });
+
+    it('should have saved the team with the pokemons set to the database', async () => {
+      const team = await createTeam('Gary');
+      const pokemons = [18, 65, 112, 59, 130, 3];
+
+      await controller.setPokemonsOnTeam(team.id, pokemons);
+
+      const updatedTeam = await orm.em.findOne(Team, team.id);
+      expect(updatedTeam.pokemons).toEqual(pokemons);
+    });
+  });
+
   async function createTeam(name: string) {
     return await controller.create(new TeamDto(name));
   }

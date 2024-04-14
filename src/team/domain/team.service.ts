@@ -23,4 +23,11 @@ export class TeamService {
   async findOne(id: number): Promise<Team> {
     return this.repository.findOneOrFail(id);
   }
+
+  async setPokemonsOnTeam(id: number, pokemons: number[]): Promise<Team> {
+    const team = await this.repository.findOneOrFail(id);
+    team.pokemons = pokemons;
+    await this.entityManager.persistAndFlush(team);
+    return team;
+  }
 }
