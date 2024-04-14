@@ -1,6 +1,6 @@
 ## Description
 
-Pokedex-kata, written in NextJS with a PostgreSQL DB. Hosted in a Docker container.
+Pokedex-kata, written in NestJS with a PostgreSQL DB. Hosted in a Docker container.
 
 ## Running with Docker
 
