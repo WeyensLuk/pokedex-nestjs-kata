@@ -2,7 +2,7 @@ import { MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { TestingModule, Test } from '@nestjs/testing';
 import config from '../../mikro-orm.test.config';
-import { PokemonSeeder } from '../../../seeders/PokemonSeeder';
+import { PokemonSeeder } from '../../seeders/PokemonSeeder';
 import { Pokemon } from '../../pokemon/domain/pokemon.entity';
 import { SearchService } from '../domain/search.service';
 import { SearchController } from './search.controller';

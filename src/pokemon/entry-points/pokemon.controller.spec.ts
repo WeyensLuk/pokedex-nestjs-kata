@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PokemonController } from './pokemon.controller';
-import { PokemonSeeder } from '../../../seeders/PokemonSeeder';
+import { PokemonSeeder } from '../../seeders/PokemonSeeder';
 import { MikroORM, NotFoundError } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import config from '../../mikro-orm.test.config';

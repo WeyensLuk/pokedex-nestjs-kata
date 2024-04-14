@@ -1,6 +1,6 @@
 import type { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { IPokemon } from '../src/pokemon/domain/pokemon.entity';
+import { IPokemon } from '../pokemon/domain/pokemon.entity';
 import { readFileSync } from 'fs';
 
 export class PokemonSeeder extends Seeder {
