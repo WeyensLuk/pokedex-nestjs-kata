@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { IPokemon } from '../domain/pokemon.entity';
 import { PokemonService } from '../domain/pokemon.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('pokemon')
 @Controller('pokemon')
@@ -21,6 +21,7 @@ export class PokemonController {
   }
 
   @Get(':id')
+  @ApiNotFoundResponse({ description: 'Pokemon not found' })
   async findOne(@Param('id') id: number): Promise<IPokemon> {
     return this.pokemonService.findOne(id);
   }
