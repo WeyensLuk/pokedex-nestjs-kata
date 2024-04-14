@@ -19,4 +19,8 @@ export class TeamService {
   async findAll(): Promise<Team[]> {
     return await this.repository.findAll();
   }
+
+  async findOne(id: number): Promise<Team> {
+    return this.repository.findOneOrFail(id);
+  }
 }

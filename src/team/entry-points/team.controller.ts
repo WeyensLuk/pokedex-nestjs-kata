@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Team } from '../domain/team.entity';
 import { TeamService } from '../domain/team.service';
 import { TeamDto } from './team.dto';
@@ -10,6 +10,11 @@ export class TeamController {
   @Get()
   async findAll(): Promise<Team[]> {
     return this.teamService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number): Promise<Team> {
+    return this.teamService.findOne(id);
   }
 
   @Post()

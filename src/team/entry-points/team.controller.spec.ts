@@ -1,4 +1,4 @@
-import { MikroORM } from '@mikro-orm/core';
+import { MikroORM, NotFoundError } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { TestingModule, Test } from '@nestjs/testing';
 import config from '../../mikro-orm.test.config';
@@ -68,6 +68,21 @@ describe('TeamController', () => {
       const teams = await orm.em.findAll(Team, {});
       expect(teams).toHaveLength(1);
       expect(teams[0].name).toBe('TeamRed');
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a team with all properties properly filled in', async () => {
+      const team = await createTeam('TeamRed');
+
+      const foundTeam = await controller.findOne(team.id);
+      expect(foundTeam.id).toBe(team.id);
+      expect(foundTeam.name).toBe(team.name);
+      expect(foundTeam.pokemons).toHaveLength(0);
+    });
+
+    it('should throw a NotFoundError when the team is not found', async () => {
+      await expect(controller.findOne(1)).rejects.toThrow(NotFoundError);
     });
   });
 
