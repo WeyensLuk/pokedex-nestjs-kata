@@ -19,9 +19,10 @@ export class PokemonController {
   @ApiQuery({ name: 'sortBy', required: false })
   @ApiQuery({ name: 'sortDirection', required: false })
   async findAll(
-    @Query() sortBy?: string,
-    @Query() sortDirection?: string,
+    @Query('sortBy') sortBy?: string,
+    @Query('sortDirection') sortDirection?: string,
   ): Promise<IPokemon[]> {
+    console.log(sortBy);
     this.validateQueryParameters({ sortBy, sortDirection });
     return this.pokemonService.findAll(sortBy, sortDirection);
   }
@@ -39,10 +40,10 @@ export class PokemonController {
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'offset', required: false })
   async findAllPaginated(
-    @Query() sortBy?: string,
-    @Query() sortDirection?: string,
-    @Query() limit?: number,
-    @Query() offset?: number,
+    @Query('sortBy') sortBy?: string,
+    @Query('sortDirection') sortDirection?: string,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
   ): Promise<IPokemon[]> {
     this.validateQueryParameters({ sortBy, sortDirection, limit, offset });
     return this.pokemonService.findAll(sortBy, sortDirection, limit, offset);
