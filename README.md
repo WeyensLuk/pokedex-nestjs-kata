@@ -1,14 +1,14 @@
 ## Description
 
-Pokedex-kata, written in NextJS with a PostgreSQL DB.
+Pokedex-kata, written in NextJS with a PostgreSQL DB. Hosted in a Docker container.
 
-## Installation
+## Running with Docker
 
 ```bash
-$ npm install
+$ docker compose up
 ```
 
-## Running the app
+## Running without Docker
 
 ```bash
 # development
@@ -33,23 +33,6 @@ $ npx mikro-orm schema:fresh --run --seed
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
