@@ -1,4 +1,4 @@
-import { NotFoundError } from '@mikro-orm/core';
+import { NotFoundError, ValidationError } from '@mikro-orm/core';
 import {
   ExceptionFilter,
   Catch,
@@ -6,9 +6,9 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 
-@Catch(Error)
+@Catch(ValidationError)
 export class ErrorFilter implements ExceptionFilter {
-  catch(exception: Error, host: ArgumentsHost) {
+  catch(exception: ValidationError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();

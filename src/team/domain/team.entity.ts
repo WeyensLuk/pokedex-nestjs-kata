@@ -1,4 +1,5 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Team {
@@ -7,11 +8,14 @@ export class Team {
   }
 
   @PrimaryKey()
+  @ApiProperty()
   id!: number;
 
   @Property()
+  @ApiProperty()
   name!: string;
 
   @Property({ type: 'array' })
+  @ApiProperty()
   pokemons: number[] = [];
 }
